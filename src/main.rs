@@ -76,8 +76,13 @@ fn complete_task(tasks: &mut Vec<Task>, id: usize) -> bool { // Function to mark
     false
 }
 
-fn remove_task(tasks: &mut Vec<Task>, id: usize) -> bool {
-
+fn remove_task(tasks: &mut Vec<Task>, id: usize) -> bool { // Function to remove a task by ID
+    if id == 0 || id > tasks.len() {return false;}; // Validate ID range
+    tasks.remove(id - 1); // Remove the task (adjust for 0-based index)
+    for (i, task) in tasks.iter_mut().enumerate() { // Reassign IDs to maintain sequence after removal
+        task.id = i + 1; // IDs start from 1
+    }
+    true
 }
 
 fn main() {
