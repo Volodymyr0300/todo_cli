@@ -106,20 +106,27 @@ fn main() {
             return;
         }
     };
-
+    println!("{}", filename);
+    println!("The vector is: {:?}", tasks);
     println!("Welcome to todo_cli! Type 'help' for commands.");
 
     loop {
         println!("> "); // Prompt for user input
         io::stdout().flush().expect("flush failed"); // Ensure prompt is displayed immediately
+        // Without flush(), the user might type their response before the prompt even appears on the screen.
 
-        let mut input = String::new(); // Initialize empty string for input
-        if io::stdin().read_line(&mut input).is_err() { // Read user input
-            println!("Error reading input. Try again."); // Handle read error
+        let mut input = String::new(); // Initialize empty string for user input
+        if io::stdin().read_line(&mut input).is_err() { // Read user input and handle potential errors
+            println!("Error reading input. Try again."); // Handle read error gracefully
             continue;
         }
 
-        let mut parts: Vec<&str> = input.split_whitespace().collect(); // Split input into parts by whitespace
+        let input = input.trim(); // Trim whitespace from input ends
+        if input.is_empty() { // If input is empty, prompt again
+            continue;
+        }
+
+        let parts: Vec<&str> = input.split_whitespace().collect(); // Split input into parts based on whitespace and collect into a vector
         let command = parts[0].to_lowercase(); // Get the command and convert to lowercase for case-insensitivity
 
         if command == "help" {
@@ -166,8 +173,13 @@ fn main() {
             }
         } else if command == "save" {
             match save_tasks(filename, &tasks) {
-                Ok(_) => println!("Saved to {}.", filename),
-                Err(e) => println!("Failed to save: {}", e),
+                Ok(()) => println!("Saved to {}.", filename),
+                Err(e) => println!("Failed to save: {}. Exiting anyway.", e),
+            }
+        } else if command == "quit" {
+            match save_tasks(filename, &tasks) {
+                Ok(()) => println!("Saved. Goodbye!"),
+                Err(e) => println!("Failed to save: {}. Exiting anyway.", e),
             }
             break;
         } else {
