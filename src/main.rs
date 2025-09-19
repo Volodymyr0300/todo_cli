@@ -85,7 +85,7 @@ fn remove_task(tasks: &mut Vec<Task>, id: usize) -> bool { // Function to remove
     true
 }
 
-fn print_help() { // Function to print help message
+fn print_help() { // Function to print help information
     println!("Commands:");
     println!("  add <description>   - add a new task");
     println!("  list                - list tasks");
@@ -97,5 +97,81 @@ fn print_help() { // Function to print help message
 }
 
 fn main() {
-    
+    let filename = "tasks.txt"; // File to store tasks
+
+    let mut tasks = match load_tasks(filename) { // Load existing tasks from file
+        Ok(t) => t, // If successful, use the loaded tasks
+        Err(e) => { // If there's an error, print it and start with an empty list
+            eprintln!("Failed to load tasks: {}", e);
+            return;
+        }
+    };
+
+    println!("Welcome to todo_cli! Type 'help' for commands.");
+
+    loop {
+        println!("> "); // Prompt for user input
+        io::stdout().flush().expect("flush failed"); // Ensure prompt is displayed immediately
+
+        let mut input = String::new(); // Initialize empty string for input
+        if io::stdin().read_line(&mut input).is_err() { // Read user input
+            println!("Error reading input. Try again."); // Handle read error
+            continue;
+        }
+
+        let mut parts: Vec<&str> = input.split_whitespace().collect(); // Split input into parts by whitespace
+        let command = parts[0].to_lowercase(); // Get the command and convert to lowercase for case-insensitivity
+
+        if command == "help" {
+            print_help();
+        } else if command == "add" {
+            if parts.len() < 2 {
+                println!("Usage: add <description>");
+                continue;
+            }
+            let description = parts[1..].join(" ");
+            add_task(&mut tasks, description);
+            println!("Task added.");
+        } else if command == "list" {
+            list_tasks(&tasks);
+        } else if command == "done" {
+            if parts.len() !=2 {
+                println!("Usage: done <id>");
+                continue;
+            }
+            match parts[1].parse::<usize>() {
+                Ok(id) => {
+                    if complete_task(&mut tasks, id) {
+                        println!("Task {} marked as done.", id);
+                    } else {
+                        println!("No task with id {}.", id);
+                    }
+                }
+                Err(_) => println!("Invalid id. Use a number."),
+            }
+        } else if command == "remove" {
+            if parts.len() != 2 {
+                println!("Usage: remove <id>");
+                continue;
+            }
+            match parts[1].parse::<usize>() {
+                Ok(id) => {
+                    if remove_task(&mut tasks, id) {
+                        println!("Task {} removed.", id);
+                    } else {
+                        println!("No task with id {}.", id);
+                    }
+                }
+                Err(_) => println!("Invalid id. Use a number."),
+            }
+        } else if command == "save" {
+            match save_tasks(filename, &tasks) {
+                Ok(_) => println!("Saved to {}.", filename),
+                Err(e) => println!("Failed to save: {}", e),
+            }
+            break;
+        } else {
+            println!("Unknown command '{}'. Type 'help' for a list of commands.", command);
+        } 
+    }
 }
