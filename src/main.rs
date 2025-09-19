@@ -66,6 +66,20 @@ fn list_tasks(tasks: &Vec<Task>) { // Function to list all tasks
     }
 }
 
+fn complete_task(tasks: &mut Vec<Task>, id: usize) -> bool { // Function to mark a task as complete by ID
+    for task in tasks.iter_mut() { // Iterate over each task mutably 
+        if task.id == id { // Check if the task ID matches the given ID
+            task.done = true;
+            return true;
+        }
+    }
+    false
+}
+
+fn remove_task(tasks: &mut Vec<Task>, id: usize) -> bool {
+
+}
+
 fn main() {
     
 }
