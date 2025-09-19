@@ -85,6 +85,17 @@ fn remove_task(tasks: &mut Vec<Task>, id: usize) -> bool { // Function to remove
     true
 }
 
+fn print_help() { // Function to print help message
+    println!("Commands:");
+    println!("  add <description>   - add a new task");
+    println!("  list                - list tasks");
+    println!("  done <id>           - mark a task as done");
+    println!("  remove <id>         - remove a task");
+    println!("  save                - save tasks to file");
+    println!("  quit                - save and exit");
+    println!("  help                - show this help");
+}
+
 fn main() {
     
 }
