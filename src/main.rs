@@ -54,6 +54,18 @@ fn add_task(tasks: &mut Vec<Task>, description: String) { // Function to add a n
     tasks.push(t); // Add the new task to the vector
 }
 
+fn list_tasks(tasks: &Vec<Task>) { // Function to list all tasks
+    if tasks.is_empty() { // Check if there are no tasks
+        println!("No tasks found."); 
+        return;
+    }
+    println!("ID Done Description");
+    for task in tasks { // Iterate over each task
+        let status = if task.done {"x"} else {" "}; // Mark done tasks with 'x' and not done with space
+        println!("{:>2} [{}] {}", task.id, status, task.description); // Print task details
+    }
+}
+
 fn main() {
     
 }
