@@ -29,7 +29,20 @@ fn load_tasks(filename: &str) -> Result<Vec<Task>, io::Error> { // Function to l
     }
     Ok(tasks) // Return the vector of tasks
 }
+
+fn save_tasks (filename: &str, tasks: &Vec<Task>) -> Result<(), io::Error> {
+    let mut lines: Vec<String> = Vec::new(); // Initialize empty vector to hold lines
     
+    for task in tasks { // Iterate over each task
+        let flag = if task.done {"1"} else {"0"}; // Convert boolean to "1" or "0"
+        lines.push(format!("{}|{}", flag, task.description)); // Format each task as "flag|description"
+    }
+
+    let content = lines.join("\n"); // Join all lines with newline characters
+    fs::write(filename, content)?; // Write the content to the file if successful
+    
+    Ok(()) // Return Ok if successful
+}
 
 fn main() {
     
