@@ -30,7 +30,7 @@ fn load_tasks(filename: &str) -> Result<Vec<Task>, io::Error> { // Function to l
     Ok(tasks) // Return the vector of tasks
 }
 
-fn save_tasks (filename: &str, tasks: &Vec<Task>) -> Result<(), io::Error> {
+fn save_tasks (filename: &str, tasks: &Vec<Task>) -> Result<(), io::Error> { // Function to save tasks to a file
     let mut lines: Vec<String> = Vec::new(); // Initialize empty vector to hold lines
     
     for task in tasks { // Iterate over each task
@@ -42,6 +42,16 @@ fn save_tasks (filename: &str, tasks: &Vec<Task>) -> Result<(), io::Error> {
     fs::write(filename, content)?; // Write the content to the file if successful
     
     Ok(()) // Return Ok if successful
+}
+
+fn add_task(tasks: &mut Vec<Task>, description: String) { // Function to add a new task
+    let id = tasks.len() + 1; // New task ID is the next number in sequence
+    let t = Task { // Create a new task
+        id,
+        description,
+        done: false,
+    };
+    tasks.push(t); // Add the new task to the vector
 }
 
 fn main() {
