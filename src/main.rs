@@ -9,7 +9,7 @@ struct Task {
 
 fn load_tasks(filename: &str) -> Result<Vec<Task>, io::Error> { // Function to load tasks from a file
     if !Path::new(filename).exists() { // Check if file exists
-        return Ok(Vec::new());
+        return Ok(Vec::new()); // If not, return an empty vector of tasks
     }
 
     let content = fs::read_to_string(filename)?; // Read file content and transform it into a string

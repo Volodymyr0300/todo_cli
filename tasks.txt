@@ -2,4 +2,5 @@
 0|to clean kitchen
 1|to stop playing games
 1|to cook meals
-1|to pull closes into shelf
+1|to kiss my wife
+1|do not do anything
