@@ -129,41 +129,41 @@ fn main() {
         let parts: Vec<&str> = input.split_whitespace().collect(); // Split input into parts based on whitespace and collect into a vector
         let command = parts[0].to_lowercase(); // Get the command and convert to lowercase for case-insensitivity
 
-        if command == "help" {
+        if command == "help" { // Show help information if user types 'help'
             print_help();
-        } else if command == "add" {
-            if parts.len() < 2 {
-                println!("Usage: add <description>");
-                continue;
+        } else if command == "add" { // Add a new task if user types 'add <description>'
+            if parts.len() < 2 { // Ensure there's a description provided
+                println!("Usage: add <description>"); // Show usage if description is missing
+                continue; // Skip to next iteration of the loop
             }
-            let description = parts[1..].join(" ");
-            add_task(&mut tasks, description);
+            let description = parts[1..].join(" "); // Join all parts after the command to form the full description
+            add_task(&mut tasks, description); // Add the new task to the list mutably
             println!("Task added.");
-        } else if command == "list" {
-            list_tasks(&tasks);
-        } else if command == "done" {
-            if parts.len() !=2 {
-                println!("Usage: done <id>");
+        } else if command == "list" { // List all tasks if user types 'list'
+            list_tasks(&tasks); // List tasks (no mutation needed)
+        } else if command == "done" { // Mark a task as done if user types 'done <id>'
+            if parts.len() !=2 { // Ensure exactly one ID is provided
+                println!("Usage: done <id>"); // Show usage if ID is missing or too many arguments
                 continue;
             }
-            match parts[1].parse::<usize>() {
-                Ok(id) => {
-                    if complete_task(&mut tasks, id) {
+            match parts[1].parse::<usize>() { // Parse the ID from string to usize 
+                Ok(id) => { //  If parsing is successful
+                    if complete_task(&mut tasks, id) { // Mark the task as done mutably 
                         println!("Task {} marked as done.", id);
                     } else {
                         println!("No task with id {}.", id);
                     }
                 }
-                Err(_) => println!("Invalid id. Use a number."),
+                Err(_) => println!("Invalid id. Use a number."), 
             }
-        } else if command == "remove" {
-            if parts.len() != 2 {
-                println!("Usage: remove <id>");
+        } else if command == "remove" { // Remove a task if user types 'remove <id>'
+            if parts.len() != 2 { // Ensure exactly one ID is provided
+                println!("Usage: remove <id>"); // Show usage if ID is missing or too many arguments
                 continue;
             }
-            match parts[1].parse::<usize>() {
-                Ok(id) => {
-                    if remove_task(&mut tasks, id) {
+            match parts[1].parse::<usize>() { //    Parse the ID from string to usize 
+                Ok(id) => { //  If parsing is successful 
+                    if remove_task(&mut tasks, id) { // Remove the task mutably 
                         println!("Task {} removed.", id);
                     } else {
                         println!("No task with id {}.", id);
@@ -171,19 +171,19 @@ fn main() {
                 }
                 Err(_) => println!("Invalid id. Use a number."),
             }
-        } else if command == "save" {
-            match save_tasks(filename, &tasks) {
-                Ok(()) => println!("Saved to {}.", filename),
-                Err(e) => println!("Failed to save: {}. Exiting anyway.", e),
+        } else if command == "save" { // Save tasks to file if user types 'save'
+            match save_tasks(filename, &tasks) { // Save tasks (no mutation needed)
+                Ok(()) => println!("Saved to {}.", filename), // If successful, confirm save 
+                Err(e) => println!("Failed to save: {}. Exiting anyway.", e), // If there's an error, print it
             }
-        } else if command == "quit" {
-            match save_tasks(filename, &tasks) {
-                Ok(()) => println!("Saved. Goodbye!"),
-                Err(e) => println!("Failed to save: {}. Exiting anyway.", e),
+        } else if command == "quit" { // Save tasks and exit if user types 'quit'
+            match save_tasks(filename, &tasks) { // Save tasks (no mutation needed)
+                Ok(()) => println!("Saved. Goodbye!"), // If successful, confirm save and exit 
+                Err(e) => println!("Failed to save: {}. Exiting anyway.", e), // If there's an error, print it
             }
-            break;
+            break; // Exit the loop and end the program
         } else {
-            println!("Unknown command '{}'. Type 'help' for a list of commands.", command);
+            println!("Unknown command '{}'. Type 'help' for a list of commands.", command); // Handle unknown commands gracefully
         } 
     }
 }
